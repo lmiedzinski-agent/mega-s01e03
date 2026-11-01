@@ -1,0 +1,52 @@
+---
+layout: runbook
+title: '#4471 reviewed: separate faults and unresolved symptoms'
+owner: support desk
+status: investigation
+reviewed: '2026-11-01'
+signature: 'lmiedzinski-agent / Codex / S01E03'
+---
+
+<script>
+ import Investigation from '#lib/kb/Investigation.svelte';
+ import CauseTable from '#lib/kb/CauseTable.svelte';
+ import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+ import DedupeExplorer from '#lib/kb/DedupeExplorer.svelte';
+ import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+The [known incident](/kb/incidents/4471) says one issue and one queued fix. That claim is too broad. This review separates the shared parser, the booking form hint, and reports whose symptoms need an independent investigation. The export is a snapshot from 4 October; this review does not establish the live queue’s current state.
+
+## File by behavior, not by label
+
+The shared parser reads month first although the tenant writes day first. Reproduce with a day-first tenant through the app or email path: 07/04 becomes 4 July rather than 7 April. Fix parsing at the boundary using the declared tenant format, validate input, and test ambiguous and unambiguous dates.
+
+Booking-v3 displays MM/DD/YYYY but reads input using the tenant’s day-first convention. This affects form reports from Alder Physio, Copper Studio, and Pale Harbour. Reproduce by following the hint and entering 04/07 for 7 April: a day-first reader produces 4 July. Make the hint, validation, and actual form interpretation agree. Fixing the shared parser alone does not fix this misleading form.
+
+Some reports describe adjacent-day shifts, differences between recipients, or an invite arriving before booking. Keep these in a separate investigation rather than declaring the parser responsible. Compare raw booking dates, timestamps, event IDs, timezone conversions, delivery logs, and client rendering. Timezone handling is a hypothesis; the export does not establish a root cause, and the chronology report might be separate again.
+
+<Investigation />
+
+## What the existing view actually computes
+
+<CauseTable ticket={4471} />
+
+The view deduplicates by report ID, then uses tenant locale and form version. It ignores the report body when assigning cause. Browser locale and intake tags are guesses, not evidence of the tenant’s date convention. The footnote records exceptions but does not remove them from the parser count. Thus the table is useful evidence about its classifier, not a complete diagnosis.
+
+<QueueTimeline ticket={4471} />
+
+Reports continue from April through the export’s last day. The July merge spike reflects a backlog being merged, not a sudden onset or a verified fix. “Known” does not mean resolved; the queued fix has not been demonstrated here.
+
+## Replace the subject-only merge rule
+
+[Decision 0001](/kb/decisions/0001-dedupe-by-subject) is accepted history, so leave it intact and propose a new decision that supersedes it. Its review date is old enough to trigger the runbook’s staleness warning. Matching words do not establish matching causes.
+
+<DedupeExplorer />
+
+App and email reports can share one parser fault despite different subjects. The same subject can refer to parser or form-hint faults. Even two form reports can differ because their tenants run different form versions. Unknown tenants are not safe to merge merely because subjects match. Identify tenant, locale, form version, channel, expected behavior, and observed behavior before merging; keep uncertain cases apart for investigation.
+
+## Follow-up
+
+Create one issue per problem with the partitioned report IDs, keep this review linked to the exported incident, and reconcile new reports before acting on these snapshot counts. Confirm fixes separately for parsing, hint consistency, and the unresolved symptoms. Never close all of #4471 just because one fix ships.
+
+<RenderStamp {signature} />
