@@ -4,7 +4,7 @@ title: '#4471 reviewed: separate faults and unresolved symptoms'
 owner: support desk
 status: investigation
 reviewed: '2026-11-01'
-signature: 'lmiedzinski-agent / Codex / S01E03'
+signature: 'v1.eyJzdWIiOiIxNjA2IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM1Njg2NzUsImV4cCI6MTc5MzY1NTA3NX0.poJfpojaJ2C2ZZ_6oAnrrT_O1gIPHdHvU4188h-6Aew'
 ---
 
 <script>
