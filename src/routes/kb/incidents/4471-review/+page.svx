@@ -2,7 +2,7 @@
 layout: runbook
 title: '#4471 reviewed: separate faults and unresolved symptoms'
 owner: support desk
-status: investigation
+status: reviewed
 reviewed: '2026-11-01'
 signature: 'v1.eyJzdWIiOiIxNjA2IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM1Njg2NzUsImV4cCI6MTc5MzY1NTA3NX0.poJfpojaJ2C2ZZ_6oAnrrT_O1gIPHdHvU4188h-6Aew'
 ---
@@ -16,6 +16,14 @@ signature: 'v1.eyJzdWIiOiIxNjA2IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpY
 </script>
 
 The [known incident](/kb/incidents/4471) says one issue and one queued fix. That claim is too broad. This review separates the shared parser, the booking form hint, and reports whose symptoms need an independent investigation. The export is a snapshot from 4 October; this review does not establish the live queue’s current state.
+
+## Engineering update after the export
+
+The course’s challenge page now reports that #4471 closed on 5 October 2026. Engineering marked the parser **fixed**, with “fix(dates): parse dd/mm for eu locales”. Close [the parser ticket](https://github.com/lmiedzinski-agent/mega-s01e03/issues/1) as completed on that evidence.
+
+Engineering marked the hint **won’t fix** because the **booking-v3 form was retired**. Close [the hint ticket](https://github.com/lmiedzinski-agent/mega-s01e03/issues/2) as not planned. Retirement is the reason for closure; do not describe this as a hint fix.
+
+These outcomes supersede the export’s queued-fix status. They are reported engineering outcomes, not tests performed in this repository. The five anomalous reports remain unverified: the update does not establish whether the parser fix resolved them. [The investigation ticket](https://github.com/lmiedzinski-agent/mega-s01e03/issues/3) stays open pending evidence.
 
 ## File by behavior, not by label
 
@@ -35,7 +43,7 @@ The view deduplicates by report ID, then uses tenant locale and form version. It
 
 <QueueTimeline ticket={4471} />
 
-Reports continue from April through the export’s last day. The July merge spike reflects a backlog being merged, not a sudden onset or a verified fix. “Known” does not mean resolved; the queued fix has not been demonstrated here.
+Reports continue from April through the export’s last day. The July merge spike reflects a backlog being merged, not a sudden onset or a verified fix. “Known” did not mean resolved in the export. The engineering update above supplies the later parser and hint outcomes; it does not demonstrate the anomalous symptoms were resolved.
 
 ## Replace the subject-only merge rule
 
@@ -47,6 +55,6 @@ App and email reports can share one parser fault despite different subjects. The
 
 ## Follow-up
 
-Create one issue per problem with the partitioned report IDs, keep this review linked to the exported incident, and reconcile new reports before acting on these snapshot counts. Confirm fixes separately for parsing, hint consistency, and the unresolved symptoms. Never close all of #4471 just because one fix ships.
+Create one issue per problem with the partitioned report IDs, keep this review linked to the exported incident, and reconcile new reports before acting on these snapshot counts. Confirm fixes separately for parsing, hint consistency, and the unresolved symptoms. Close each known problem with its own reason and evidence. Do not treat the unverified anomalous symptoms as resolved merely because the parser fix shipped.
 
 <RenderStamp {signature} />
